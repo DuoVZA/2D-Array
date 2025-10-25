@@ -2,6 +2,8 @@
 #include <time.h>
 using namespace std;
 
+#pragma region Matrix
+
 template <class T>
 class Matrix {
     T** arr;
@@ -9,7 +11,7 @@ class Matrix {
 public:
     Matrix();
     Matrix(int r, int c, T** a = nullptr);
-    Matrix(const Matrix<T>& other); // ✅ копіювальний конструктор
+    Matrix(const Matrix<T>& other);
     ~Matrix();
     void Input();
     void RandInput();
@@ -18,7 +20,14 @@ public:
     Matrix<T> operator - (const Matrix& obj);
     Matrix<T> operator * (const Matrix& obj);
     Matrix<T> operator / (const Matrix& obj);
+
+    template <class T>
+    friend istream& operator>> (istream& is, Matrix<T>& obj);
+
+    template <class T>
+    friend ostream& operator << (ostream& os, Matrix<T>& obj);
 };
+
 
 template <class T>
 Matrix<T>::Matrix() : rows(0), cols(0), arr(nullptr) {}
@@ -163,3 +172,49 @@ Matrix<T> Matrix<T>::operator/(const Matrix& obj)
             }
     return newMatrix;
 }
+
+#pragma endregion
+
+#pragma region Point
+
+class Point
+{
+    int x;
+    int y;
+public:
+    Point(int _x = 0, int _y = 0) : x(_x), y(_y) {}
+    Point operator +(const Point& m) const
+    {
+        return Point(x + m.x, y + m.y);
+    }
+    Point operator -(const Point& m) const
+    {
+        return Point(x - m.x, y - m.y);
+    }
+    Point operator *(const Point& m) const
+    {
+        return Point(x * m.x, y * m.y);
+    }
+    Point operator /(const Point& m) const
+    {
+        return Point(
+            m.x != 0 ? x / m.x : 0,
+            m.y != 0 ? y / m.y : 0
+        );
+    }
+    friend ostream& operator << (ostream& os, const Point& m)
+    {
+        os << "Matrix (" << m.x << "x" << m.y << "):" << endl;
+        return os;
+    }
+    friend istream& operator >> (istream& is, Point& m)
+    {
+        cout << "Enter x: ";
+        is >> m.x;
+        cout << "Enter y: ";
+        is >> m.y;
+        return is;
+    }
+};
+
+#pragma endregion
